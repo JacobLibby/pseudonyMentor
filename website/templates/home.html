@@ -1,0 +1,166 @@
+{% extends "base.html" %} {% block title %} Home {% endblock %} {% block content %}
+  <!-- <h1 align="center">DATA</h1>
+  <br> -->
+  <!-- <h1 align="center">{{ type_of_user }}</h1>
+  <br>
+  <h1 align="center">{{ user_id }}</h1>
+  <br>
+  <h1 align="center">{{ sendQuery }}</h1>
+  <br> -->
+  <form method="POST">
+    <br><br>
+  <!-- <h1 align="center">{{ type_of_user }}</h1>
+  <h1 align="center">{{ sendQuery }}</h1> -->
+
+  {% if type_of_user == 'Mentee' %}
+  <h1 align="center"> Mentors </h1>
+  <table style="width:100%" border="1" align="center">
+    <tr>
+      <th>Graduation Year</th>
+      <th>Major</th>
+      <th>Position</th>
+      <th>Bio</th>
+      <th>Connected?</th>
+    </tr>
+    
+    {% for each in sendQuery %}
+      {% if each.grad_year or each.major or each.position or each.bio %}
+        <tr>
+          <td>{{ each.grad_year }}</td>
+          <td>{{ each.major }}</td>
+          <td>{{ each.position }}</td>
+          <td>{{ each.bio }}</td>
+          <td>
+            {% set vars = {'sent': 0} %}
+              {% for eachconnection in connections_table %}
+                {% if eachconnection.mentorID == each.id and eachconnection.menteeID == user.id %}
+                  {% if vars.update({'foo': 1}) %} {% endif %}
+                  {% if vars.foo %} {% endif %}
+                {% endif %}
+              {% endfor %}
+              {% if vars.foo %}
+              <button name={{each.id}} id={{each.id}} value={{each.id}} type="submit" class="btn btn-secondary">Pending</button>
+              {% else %}
+              <button name={{each.id}} id={{each.id}} value={{each.id}} type="submit" class="btn btn-primary">Connect</button>
+              {% endif %}
+            
+
+          </td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  </table>
+
+
+  {% elif type_of_user == 'Mentor' %}
+  <h1 align="center"> Mentees </h1>
+  <table style="width:100%" border="1" align="center">
+    <tr>
+      <th>Graduation Year</th>
+      <th>Major</th>
+      <th>Current School</th>
+      <th>Bio</th>
+      <th>Connected?</th>
+    </tr>
+    {% for each in sendQuery %}
+    {% if (each.grad_year != None and each.grad_year != "NONE") or (each.major != None and each.major != "NONE") or (each.current_school != None and each.current_school != "NONE") or (each.bio != None and each.bio != "NONE") %}
+    <tr>
+      <td>{{ each.grad_year }}</td>
+      <td>{{ each.major }}</td>
+      <td>{{ each.current_school }}</td>
+      <td>{{ each.bio }}</td>
+      <td align="center">
+        {% set vars = {'sent': 0} %}
+          {% for eachconnection in connections_table %}
+            {% if eachconnection.menteeID == each.id and eachconnection.mentorID == user.id %}
+              {% if vars.update({'foo': 1}) %} {% endif %}
+              {% if vars.foo %} {% endif %}
+            {% endif %}
+          {% endfor %}
+          {% if vars.foo %}
+          <button name={{each.id}} id={{each.id}} value={{each.id}} type="submit" class="btn btn-secondary" >Pending</button>
+          {% else %}
+          <button name={{each.id}} id={{each.id}} value={{each.id}} type="submit" class="btn btn-primary" >Connect</button>
+          {% endif %}
+        
+
+      </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+  {% endif %}
+  </table>
+
+
+  {% if type_of_user == 'Admin' %}
+    <h2 align="center">Mentors</h2>
+    <table style="width:100%" border="1" align="center">
+    <tr>
+      <th>Graduation Year</th>
+      <th>Major</th>
+      <th>Position</th>
+      <th>Bio</th>
+    </tr>   
+    {% for each in mentorQuery %}
+        <tr>
+          <td>{{ each.grad_year }}</td>
+          <td>{{ each.major }}</td>
+          <td>{{ each.position }}</td>
+          <td>{{ each.bio }}</td>
+        </tr>
+    {% endfor %}
+  </table>
+  <br> <br> <br>
+  <h2 align="center">Mentees</h2>
+  <table style="width:100%" border="1" align="center">
+    <tr>
+      <th>Graduation Year</th>
+      <th>Major</th>
+      <th>Current School</th>
+      <th>Bio</th>
+    </tr>
+    {% for each in menteeQuery %}
+    <tr>
+      <td>{{ each.grad_year }}</td>
+      <td>{{ each.major }}</td>
+      <td>{{ each.current_school }}</td>
+      <td>{{ each.bio }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+    {% endif %}
+
+  <!-- <ul class="list-group list-group-flush" id="notes">
+    {% for note in user.notes %}
+    <li class="list-group-item">
+      {{ note.data }}
+      <button type="button" class="close" onClick="deleteNote({{ note.id }})">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </li>
+    {% endfor %}
+  </ul>
+  <form method="POST">
+    <textarea name="note" id="note" class="form-control"></textarea>
+    <br />
+    <div align="center">
+      <button type="submit" class="btn btn-primary">Add Note</button>
+    </div>
+  </form> -->
+
+</form>
+  {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

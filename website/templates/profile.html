@@ -1,0 +1,392 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+    %}
+    <style>
+      .centerTable {
+        text-align:center
+      }
+      .rightTable {
+        text-align:right
+      }
+
+    </style>
+    <form method="POST">
+    <h1 align="center">{{user.callsign}}'s Profile</h1>
+    <h2 align="center">{{ type_of_user }}</h2>
+    <h3 align="center">ID: {{user.id}}</h3>
+    
+    <br><br><br>
+    {% if type_of_user != 'Admin' %}
+      <h2 align="center">Incoming Connection Requests</h2><br>
+      <table style="width:100%" border="1" align="center">
+    
+      {% if type_of_user == 'Mentor' %}
+        <tr>
+          <th>Graduation Year</th>
+          <th>Major</th>
+          <th>Current School</th>
+          <th>Bio</th>
+          <th>Approve?</th>
+        </tr>
+
+        {% for eachconnection, eachmentee in specific_connections %}
+
+
+          {% if eachconnection.date_accepted == None %}
+          <tr>
+            <td>{{eachmentee.grad_year}}</td>
+            <td>{{eachmentee.major}}</td>
+            <td>{{eachmentee.current_school}}</td>
+            <td>{{eachmentee.bio}}</td>
+            <td align="center"><button name={{eachmentee.id}} id={{eachmentee.id}} value={{eachmentee.id}} type="submit" class="btn btn-primary">Connect</button>
+                               <button name={{ eachmentee.id|string + "deny" }} id={{ eachmentee.id|string + "deny" }} value={{ eachmentee.id|string + "deny" }} type="submit" class="btn btn-danger">Deny</button></td>
+          </tr>
+          {% endif %}
+          
+          
+
+        {% endfor %}
+      {% elif type_of_user == 'Mentee' %}
+      <tr>
+        <th>Graduation Year</th>
+        <th>Major</th>
+        <th>Position</th>
+        <th>Bio</th>
+      </tr>
+        {% for eachconnection, eachmentor in specific_connections %}
+
+
+          {% if eachconnection.date_accepted == None %}
+          <tr>
+            <td>{{eachmentor.grad_year}}</td>
+            <td>{{eachmentor.major}}</td>
+            <td>{{eachmentor.position}}</td>
+            <td>{{eachmentor.bio}}</td>
+            <td align="center"><button name={{eachmentor.id}} id={{eachmentor.id}} value={{eachmentor.id}} type="submit" class="btn btn-primary">Connect</button>
+              <button name={{ eachmentor.id|string + "deny" }} id={{ eachmentor.id|string + "deny" }} value={{ eachmentor.id|string + "deny" }} type="submit" class="btn btn-danger">Deny</button></td>
+          </tr>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </table>
+    {% endif %}
+<br><br><br><br><br>
+
+
+
+{% if type_of_user != 'Admin' %}
+<h2 align="center">Connections</h2><br>
+<table style="width:100%" border="1" align="center">
+
+{% if type_of_user == 'Mentor' %}
+  <tr>
+    <th>Pending/Accepted</th>
+    <th>Email</th>
+    <th>Graduation Year</th>
+    <th>Major</th>
+    <th>Current School</th>
+    <th>Bio</th>
+    <th>Delete?</th>
+  </tr>
+
+  {% for eachconnection, eachmentee in verified_connections %}
+
+
+    
+    <tr>
+      <td>{% if eachconnection.date_accepted == None %}
+        Pending
+        {% else %}
+        Accepted
+        {% endif %}
+      </td>
+      <td>{% if eachconnection.date_accepted == None %}
+        N/A
+        {% else %}
+        {{ eachconnection.menteeID }}
+        {% endif %}
+      </td>
+      <td>{{eachmentee.grad_year}}</td>
+      <td>{{eachmentee.major}}</td>
+      <td>{{eachmentee.current_school}}</td>
+      <td>{{eachmentee.bio}}</td>
+      <td align="center"><button name={{eachmentee.id|string + "delete"}} id={{eachmentee.id|string + "delete"}} value={{eachmentee.id|string + "delete"}} type="submit" class="btn btn-primary">Delete</button></td>
+    </tr>
+    
+    
+    
+
+  {% endfor %}
+{% elif type_of_user == 'Mentee' %}
+<tr>
+  <th>Pending/Accepted</th>
+  <th>Email</th>
+  <th>Graduation Year</th>
+  <th>Major</th>
+  <th>Position</th>
+  <th>Bio</th>
+  <th>Delete?</th>
+</tr>
+  {% for eachconnection, eachmentor in verified_connections %}
+
+
+    {% if eachconnection.date_accepted == None %}
+    <tr>
+      <td>{% if eachconnection.date_accepted == None %}
+        Pending
+        {% else %}
+        Accepted
+        {% endif %}
+      </td>
+      <td>{% if eachconnection.date_accepted == None %}
+        N/A
+        {% else %}
+        {{ eachconnection.mentorID }}
+        {% endif %}
+      </td>
+      <td>{{eachconnection.grad_year}}</td>
+      <td>{{eachconnection.major}}</td>
+      <td>{{eachconnection.position}}</td>
+      <td>{{eachconnection.bio}}</td>
+      <td align="center"><button name={{eachmentee.id|string + "delete"}} id={{eachmentee.id|string + "delete"}} value={{eachmentee.id|string + "delete"}} type="submit" class="btn btn-primary">Delete</button></td>
+    </tr>
+    {% endif %}
+  {% endfor %}
+{% endif %}
+</table>
+{% endif %}
+
+
+
+
+
+    <br><br><br><br><br>
+    <h2 align="center">Edit Profile</h2>
+    <table style="width:100%" border="0" align="center">
+      <tr>
+        {% if type_of_user == 'Mentor' or type_of_user == 'Mentee' or type_of_user == 'Admin'%}
+        <th class = "centerTable">Email</th>
+        <td class = "centerTable">{{ joined.email }}</td>
+        <td >
+          <div class="form-group">
+          <label for="new_email"></label>
+          <input
+            type="email"
+            class="form-control"
+            id="new_email"
+            name="new_email"
+            placeholder="Enter New Email"
+          />
+        </div>
+      </td>
+      </tr>
+      <tr>
+        <th class = "centerTable">Call-Sign</th>
+        <td class = "centerTable">{{ joined.callsign }}</td>
+        <td>
+          <div class="form-group">
+          <label for="new_callsign"></label>
+          <input
+            type="callsign"
+            class="form-control"
+            id="new_callsign"
+            name="new_callsign"
+            placeholder="Enter New Call-Sign"
+          />
+        </div>
+      </td>
+      </tr>
+
+        {% if type_of_user == 'Mentor' %}
+      <tr>
+        <th class="centerTable">Major</th>
+        <td class="centerTable">{{ current_user_specifics.major }}</td>
+        <td>
+          <div class="form-group">
+          <label for="new_major"></label>
+          <input
+            type="major"
+            class="form-control"
+            id="new_major"
+            name="new_major"
+            placeholder="Enter New Major"
+          />
+        </div>
+      </td>
+      </tr>
+      <tr>
+        <th class="centerTable">Graduation Year</th>
+        <td class="centerTable">{{ current_user_specifics.grad_year }}</td>
+        <td>
+          <div class="form-group">
+          <label for="new_gradyear"></label>
+          <input
+            type="grad_year"
+            class="form-control"
+            id="new_gradyear"
+            name="new_gradyear"
+            placeholder="Enter New Graduation Year"
+          />
+        </div>
+      </td>
+      </tr>
+      <tr>
+        <th class="centerTable">Current Position</th>
+        <td class="centerTable">{{ current_user_specifics.position }}</td>
+        <td>
+          <div class="form-group">
+          <label for="new_position"></label>
+          <input
+            type="position"
+            class="form-control"
+            id="new_position"
+            name="new_position"
+            placeholder="Enter New Position"
+          />
+        </div>
+      </td>
+      </tr>
+      <tr>
+        <th class="centerTable">Highest Level of Education</th>
+        <td class="centerTable">{{ current_user_specifics.levelOfEducation }}</td>
+        <td>
+          <div class="form-group">
+          <label for="new_levelOfEducation"></label>
+          <input
+            type="levelOfEducation"
+            class="form-control"
+            id="new_levelOfEducation"
+            name="new_levelOfEducation"
+            placeholder="Update Highest Level of Education"
+          />
+        </div>
+      </td>
+      </tr>
+      <tr>
+        <th class="centerTable">Biography</th>
+        <td class="centerTable">{{ current_user_specifics.bio }}</td>
+        <td>
+          <div class="form-group">
+          <label for="new_bio"></label>
+          <input
+            type="bio"
+            class="form-control"
+            id="new_bio"
+            name="new_bio"
+            placeholder="Enter New Biography"
+          />
+        </div>
+      </td>
+      </tr>
+      
+        {% elif type_of_user == 'Mentee' %}
+        <tr>
+          <th class="centerTable">Major</th>
+          <td class="centerTable">{{ current_user_specifics.major }}</td>
+          <td>
+            <div class="form-group">
+            <label for="new_major"></label>
+            <input
+              type="major"
+              class="form-control"
+              id="new_major"
+              name="new_major"
+              placeholder="Enter New Major"
+            />
+          </div>
+        </td>
+        </tr>
+        <tr>
+          <th class="centerTable">Graduation Year</th>
+          <td class="centerTable">{{ current_user_specifics.grad_year }}</td>
+          <td>
+            <div class="form-group">
+            <label for="new_gradyear"></label>
+            <input
+              type="grad_year"
+              class="form-control"
+              id="new_gradyear"
+              name="new_gradyear"
+              placeholder="Enter New Graduation Year"
+            />
+          </div>
+        </td>
+        </tr>
+        <tr>
+          <th class="centerTable">Biography</th>
+          <td class="centerTable">{{ current_user_specifics.bio }}</td>
+          <td>
+            <div class="form-group">
+            <label for="new_bio"></label>
+            <input
+              type="bio"
+              class="form-control"
+              id="new_bio"
+              name="new_bio"
+              placeholder="Enter New Biography"
+            />
+          </div>
+        </td>
+        </tr>
+        <tr>
+          <th class="centerTable">Current School</th>
+          <td class="centerTable">{{ current_user_specifics.current_school }}</td>
+          <td>
+            <div class="form-group">
+            <label for="new_currentschool"></label>
+            <input
+              type="current_school"
+              class="form-control"
+              id="new_currentschool"
+              name="new_currentschool"
+              placeholder="Enter New School"
+            />
+          </div>
+        </td>
+        </tr>
+        {% elif type_of_user == 'Admin' %}
+
+        {% endif %}
+      {% endif %}
+
+
+
+    </table>
+    <div style="height: 100px;
+    position: relative;
+    border: 0px solid green">
+    <div style="margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%)">
+    <button type="submit" >Apply Changes</button>
+  </div>
+  </div>
+    <br><br><br><br><br><br><br>
+
+    <h3 align="center" style="color:red; font-weight:bold">Delete Account</h3>
+    <div class="form-group">
+      <label for="verify_callsign">Verify Call-Sign</label>
+      <input
+        type="callsign"
+        class="form-control"
+        id="verify_callsign"
+        name="verify_callsign"
+        placeholder="Are you sure you want to delete your account?"
+      />
+    </div>
+    <button name="DELETE" id="DELETE" value="DELETE" type="submit" class="btn btn-danger">DELETE ACCOUNT</button>
+
+    <br><br><br><br><br>
+
+
+
+
+
+
+
+
+
+  </form>
+   {% endblock %} 
