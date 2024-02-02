@@ -11,13 +11,13 @@ General steps to start using database:
 Additional tools:
 
 Profile Page
-    * Edit personal information
-    * Delete account on the bottom by putting in your call-sign for verification
-    * Deny incoming requests to connect
-    * Delete connections
+* Edit personal information
+* Delete account on the bottom by putting in your call-sign for verification
+* Deny incoming requests to connect
+* Delete connections
 
 Home
-    * By clicking on "Pending", you can rescind your connection request
+* By clicking on "Pending", you can rescind your connection request
 
 ## Running The App
 
