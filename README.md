@@ -32,3 +32,8 @@ python main.py
 ## Viewing The App
 
 Go to `http://127.0.0.1:5000`
+
+
+## Notes
+
+I am currently in the process of pre-populating the database, so that functionalities such as finding other mentees/mentors is more effective out of the box
